@@ -7,9 +7,6 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 import javafx.geometry.*;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 public class MoleculaApplication extends Application {
     VBox vBox;
     HBox hBox;
@@ -153,8 +150,9 @@ public class MoleculaApplication extends Application {
         System.out.println("In stop method");
     }
 
-
     public static void main(String[] args) {
         launch();
     }
+
+
 }
