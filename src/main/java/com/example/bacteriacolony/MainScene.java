@@ -9,11 +9,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class MainScene {
-    static Button[][] cells;
-    static int[][] states;
-    static VBox vBox;
-    static HBox hBox;
-    static boolean startStopStatement;
     static FlowPane mainFlowPane;
     static Scene createScene(int width, int height) {
         mainFlowPane = new FlowPane(10, 10);
@@ -24,12 +19,12 @@ public class MainScene {
     }
 
     public static void fieldFilling(int width, int height) {
-        vBox = new VBox();
+        VBox vBox = new VBox();
         vBox.setSpacing(1.5);
-        cells = new Button[height][width];
-        states = new int[height][width];
+        Button[][] cells = new Button[height][width];
+        int[][] states = new int[height][width];
         for (int i = 0; i < cells.length; i++) {
-            hBox = new HBox();
+            HBox hBox = new HBox();
             hBox.setSpacing(1);
             for (int j = 0; j < cells[0].length; j++) {
                 cells[i][j] = new Button("  ");
@@ -54,18 +49,18 @@ public class MainScene {
         }
         Label empty = new Label("");
         vBox.getChildren().add(empty);
-        HBox control = new HBox();
-        control.setSpacing(10);
+        HBox controlPanel = new HBox();
+        controlPanel.setSpacing(10);
 
         Button startStop = startStopButtonSetting();
         Button clear = clearButtonSetting();
         Button randomFilling = randomFillingButtonSetting();
 
-        control.getChildren().add(startStop);
-        control.getChildren().add(clear);
-        control.getChildren().add(randomFilling);
+        controlPanel.getChildren().add(startStop);
+        controlPanel.getChildren().add(clear);
+        controlPanel.getChildren().add(randomFilling);
 
-        vBox.getChildren().add(control);
+        vBox.getChildren().add(controlPanel);
         mainFlowPane.getChildren().add(vBox);
     }
 
@@ -73,19 +68,19 @@ public class MainScene {
         Button startStop = new Button("Start");
 
         startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
-        startStopStatement = false;
+        final boolean[] startStopStatement = {false};
         startStop.setOnAction(actionEvent -> {
-            if (startStopStatement) {
+            if (startStopStatement[0]) {
                 startStop.setText("Start");
                 startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
-                startStopStatement = false;
+                startStopStatement[0] = false;
             } else {
                 startStop.setText("Stop");
                 startStop.setStyle("-fx-text-fill: blue; -fx-background-color: red");
-                startStopStatement = true;
+                startStopStatement[0] = true;
             }
             // startStopStatement = startStopStatement? false : true;
-            System.out.println(startStopStatement);
+            System.out.println(startStopStatement[0]);
         });
         return startStop;
     }

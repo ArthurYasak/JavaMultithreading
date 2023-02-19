@@ -11,19 +11,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class StartScene{
-    static FlowPane startFlowPane;
-    static VBox vBox;
-    static HBox hBox;
-    static int width;
-    static int heigh;
-    static Button enter;
     public static Scene createScene(Stage stage) {
-        startFlowPane = new FlowPane(10, 10);
+        FlowPane startFlowPane = new FlowPane(10, 10);
         startFlowPane.setAlignment(Pos.CENTER);
         Scene scene = new Scene(startFlowPane, 700, 500);
 
-        vBox = new VBox();
-        hBox = new HBox();
+        VBox vBox = new VBox();
+        HBox hBox = new HBox();
         hBox.setSpacing(40);
         Label message = new Label("Enter the field parameters");
         vBox.getChildren().add(message);
@@ -33,13 +27,13 @@ public class StartScene{
         TextField heighField = new TextField();
         heighField.setPromptText("heigh");
         hBox.getChildren().add(heighField);
-        enter = new Button("Enter");
+        Button enter = new Button("Enter");
 
-        StartScene.enter.setOnAction(actionEvent -> {
+        enter.setOnAction(actionEvent -> {
             String textWidth = widthField.getText();
-            width = Integer.parseInt(textWidth);
+            int width = Integer.parseInt(textWidth);
             String textHeigh = heighField.getText();
-            heigh = Integer.parseInt(textHeigh);
+            int heigh = Integer.parseInt(textHeigh);
             Scene mainScene = MainScene.createScene(width, heigh);
             stage.setScene(mainScene);
         });
