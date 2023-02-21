@@ -33,8 +33,10 @@ public class StartScene{
             String textWidth = widthField.getText();
             int width = Integer.parseInt(textWidth);
             String textHeigh = heighField.getText();
-            int heigh = Integer.parseInt(textHeigh);
-            Scene mainScene = MainScene.createScene(width, heigh);
+            int height = Integer.parseInt(textHeigh);
+            Button[][] cells = new Button[height][width];
+            int[][] states = new int[height][width];
+            Scene mainScene = MainScene.createScene(cells, states);
             stage.setScene(mainScene);
         });
 

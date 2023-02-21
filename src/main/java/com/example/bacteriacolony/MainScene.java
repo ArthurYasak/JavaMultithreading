@@ -8,47 +8,30 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+
 public class MainScene {
     static FlowPane mainFlowPane;
-    static Scene createScene(int width, int height) {
+    static Button[][] mainCells;
+    static  int[][] mainStates;
+    static VBox vBox;
+    static HBox[] hBoxes;
+    static Scene createScene(Button[][] cells, int[][] states) {
         mainFlowPane = new FlowPane(10, 10);
         mainFlowPane.setAlignment(Pos.CENTER);
+        mainCells = cells;
+        mainStates = states;
         Scene mainScene = new Scene(mainFlowPane, 700, 500);
-        fieldFilling(width, height);
+        controlPanelFilling();
+        fieldFilling();
+
         return mainScene;
     }
 
-    public static void fieldFilling(int width, int height) {
-        VBox vBox = new VBox();
+    public static void controlPanelFilling() {
+        vBox = new VBox();
         vBox.setSpacing(1.5);
-        Button[][] cells = new Button[height][width];
-        int[][] states = new int[height][width];
-        for (int i = 0; i < cells.length; i++) {
-            HBox hBox = new HBox();
-            hBox.setSpacing(1);
-            for (int j = 0; j < cells[0].length; j++) {
-                cells[i][j] = new Button("  ");
-                final int finI = i;
-                final int finJ = j;
-                cells[i][j].setOnAction(actionEvent -> {
-                    System.out.print(finI + " : "+ finJ + "  state: ");
-
-                    if (states[finI][finJ] == 0) {
-                        states[finI][finJ] = 1;
-
-                        cells[finI][finJ].setStyle("-fx-background-color: red");
-                    } else {
-                        states[finI][finJ] = 0;
-                        cells[finI][finJ].setStyle("-fx-border-width: 1 1 1 1");
-                    }
-                    System.out.println(states[finI][finJ]);
-                });
-                hBox.getChildren().add(cells[i][j]);
-            }
-            vBox.getChildren().add(hBox);
-        }
-        Label empty = new Label("");
-        vBox.getChildren().add(empty);
+        Label space = new Label("");
+        vBox.getChildren().add(space);
         HBox controlPanel = new HBox();
         controlPanel.setSpacing(10);
 
@@ -57,30 +40,94 @@ public class MainScene {
         Button randomFilling = randomFillingButtonSetting();
 
         controlPanel.getChildren().add(startStop);
-        controlPanel.getChildren().add(clear);
-        controlPanel.getChildren().add(randomFilling);
+        // controlPanel.getChildren().add(clear);
+        // controlPanel.getChildren().add(randomFilling);
 
         vBox.getChildren().add(controlPanel);
         mainFlowPane.getChildren().add(vBox);
     }
+    public static void fieldFilling() {
+        hBoxes = new HBox[mainCells.length];
+
+        for (int i = 0; i < mainCells.length; i++) {
+            hBoxes[i] = new HBox();
+            hBoxes[i].setSpacing(1);
+            for (int j = 0; j < mainCells[0].length; j++) {
+                mainCells[i][j] = new Button("  ");
+                if (mainStates[i][j] == 1) {
+                    mainCells[i][j].setStyle("-fx-background-color: red");
+                } else {
+                    mainCells[i][j].setStyle("-fx-border-width: 1 1 1 1");
+                }
+                final int finI = i;
+                final int finJ = j;
+                mainCells[i][j].setOnAction(actionEvent -> {
+                    System.out.print(finI + " : "+ finJ + "  state: ");
+
+                    if (mainStates[finI][finJ] == 0) {
+                        mainStates[finI][finJ] = 1;
+
+                        mainCells[finI][finJ].setStyle("-fx-background-color: red");
+                    } else {
+                        mainStates[finI][finJ] = 0;
+                        mainCells[finI][finJ].setStyle("-fx-border-width: 1 1 1 1");
+                    }
+                    System.out.println(mainStates[finI][finJ]);
+                });
+
+                hBoxes[i].getChildren().add(mainCells[i][j]);
+
+            }
+            vBox.getChildren().add(hBoxes[i]);
+        }
+    }
+    public static void fieldUpdating() {
+        for (int i = 0; i < mainCells.length; i++) {
+            for (int j = 0; j < mainCells[0].length; j++) {
+                hBoxes[i].getChildren().remove(mainCells[i][j]);
+            }
+            vBox.getChildren().remove(hBoxes[i]);
+        }
+        fieldFilling();
+    }
 
     public static Button startStopButtonSetting() {
         Button startStop = new Button("Start");
+        final boolean[] startStopStatement = {false};
+
+        // FieldCalculation fieldCalculation = new FieldCalculation();
+        // Thread calculationThread = new Thread(fieldCalculation);
 
         startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
-        final boolean[] startStopStatement = {false};
+        // new Thread(() -> {
         startStop.setOnAction(actionEvent -> {
             if (startStopStatement[0]) {
+
+                startStopStatement[0] = false;
                 startStop.setText("Start");
                 startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
-                startStopStatement[0] = false;
+
             } else {
+
+                startStopStatement[0] = true;
                 startStop.setText("Stop");
                 startStop.setStyle("-fx-text-fill: blue; -fx-background-color: red");
-                startStopStatement[0] = true;
+
+                FieldCalculation.calculate();
+                FieldDrawing.draw();
+
+                // while (startStopStatement[0]) {
+                //     try {
+                //         FieldCalculation.calculate();
+                //         FieldDrawing.draw();
+                //         Thread.sleep(2000);
+                //     } catch (InterruptedException ie) {
+                //         ie.printStackTrace();
+                //     }
+                // }
+
             }
-            // startStopStatement = startStopStatement? false : true;
-            System.out.println(startStopStatement[0]);
+            System.out.println("startStopStatement[0]:\n" + startStopStatement[0]);
         });
         return startStop;
     }
