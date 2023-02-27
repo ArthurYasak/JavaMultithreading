@@ -1,5 +1,6 @@
-package com.example.bacteriacolony;
+package com.example.bacteriacolony.GUI;
 
+import com.example.bacteriacolony.calculations.FieldCalculation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,30 +9,30 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-
 public class MainScene {
-    static FlowPane mainFlowPane;
-    static Button[][] mainCells;
-    static  int[][] mainStates;
-    static VBox vBox;
-    static HBox[] hBoxes;
-    static Scene createScene(Button[][] cells, int[][] states) {
+    private FlowPane mainFlowPane;
+    private Button[][] cells;
+    private int[][] states;
+    private VBox vBox;
+    private HBox[] hBoxes;
+    Scene createScene(int width, int height) {
+        cells = new Button[height][width];
+        states = new int[height][width];
         mainFlowPane = new FlowPane(10, 10);
         mainFlowPane.setAlignment(Pos.CENTER);
-        mainCells = cells;
-        mainStates = states;
         Scene mainScene = new Scene(mainFlowPane, 700, 500);
+
         controlPanelFilling();
         fieldFilling();
 
         return mainScene;
     }
 
-    public static void controlPanelFilling() {
+    public void controlPanelFilling() {
         vBox = new VBox();
         vBox.setSpacing(1.5);
-        Label space = new Label("");
-        vBox.getChildren().add(space);
+        Label empty = new Label("");
+        vBox.getChildren().add(empty);
         HBox controlPanel = new HBox();
         controlPanel.setSpacing(10);
 
@@ -46,52 +47,53 @@ public class MainScene {
         vBox.getChildren().add(controlPanel);
         mainFlowPane.getChildren().add(vBox);
     }
-    public static void fieldFilling() {
-        hBoxes = new HBox[mainCells.length];
 
-        for (int i = 0; i < mainCells.length; i++) {
+    public void fieldFilling() {
+        hBoxes = new HBox[cells.length];
+        for (int i = 0; i < cells.length; i++) {
             hBoxes[i] = new HBox();
             hBoxes[i].setSpacing(1);
-            for (int j = 0; j < mainCells[0].length; j++) {
-                mainCells[i][j] = new Button("  ");
-                if (mainStates[i][j] == 1) {
-                    mainCells[i][j].setStyle("-fx-background-color: red");
+
+            for (int j = 0; j < cells[0].length; j++) {
+                cells[i][j] = new Button("  ");
+                if (states[i][j] == 1) {
+                    cells[i][j].setStyle("-fx-background-color: red");
                 } else {
-                    mainCells[i][j].setStyle("-fx-border-width: 1 1 1 1");
+                    cells[i][j].setStyle("-fx-border-width: 1 1 1 1");
                 }
                 final int finI = i;
                 final int finJ = j;
-                mainCells[i][j].setOnAction(actionEvent -> {
+                cells[i][j].setOnAction(actionEvent -> {
                     System.out.print(finI + " : "+ finJ + "  state: ");
 
-                    if (mainStates[finI][finJ] == 0) {
-                        mainStates[finI][finJ] = 1;
+                    if (states[finI][finJ] == 0) {
+                        states[finI][finJ] = 1;
 
-                        mainCells[finI][finJ].setStyle("-fx-background-color: red");
+                        cells[finI][finJ].setStyle("-fx-background-color: red");
                     } else {
-                        mainStates[finI][finJ] = 0;
-                        mainCells[finI][finJ].setStyle("-fx-border-width: 1 1 1 1");
+                        states[finI][finJ] = 0;
+                        cells[finI][finJ].setStyle("-fx-border-width: 1 1 1 1");
                     }
-                    System.out.println(mainStates[finI][finJ]);
+                    System.out.println(states[finI][finJ]);
                 });
 
-                hBoxes[i].getChildren().add(mainCells[i][j]);
-
+                hBoxes[i].getChildren().add(cells[i][j]);
             }
-            vBox.getChildren().add(hBoxes[i]);
+            vBox.getChildren().add(0, hBoxes[i]);
         }
     }
-    public static void fieldUpdating() {
-        for (int i = 0; i < mainCells.length; i++) {
-            for (int j = 0; j < mainCells[0].length; j++) {
-                hBoxes[i].getChildren().remove(mainCells[i][j]);
+
+    public void fieldUpdating() {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[0].length; j++) {
+                hBoxes[i].getChildren().remove(cells[i][j]);
             }
             vBox.getChildren().remove(hBoxes[i]);
         }
         fieldFilling();
     }
 
-    public static Button startStopButtonSetting() {
+    public Button startStopButtonSetting() {
         Button startStop = new Button("Start");
         final boolean[] startStopStatement = {false};
 
@@ -108,13 +110,12 @@ public class MainScene {
                 startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
 
             } else {
-
                 startStopStatement[0] = true;
                 startStop.setText("Stop");
                 startStop.setStyle("-fx-text-fill: blue; -fx-background-color: red");
-
-                FieldCalculation.calculate();
-                FieldDrawing.draw();
+                FieldCalculation fieldCalculation = new FieldCalculation();
+                states = fieldCalculation.calculate(states);
+                fieldUpdating();
 
                 // while (startStopStatement[0]) {
                 //     try {
@@ -131,14 +132,14 @@ public class MainScene {
         });
         return startStop;
     }
-    public static Button clearButtonSetting() {
+    public Button clearButtonSetting() {
         Button clear = new Button("Clear");
         clear.setOnAction(actionEvent -> {
 
         });
         return clear;
     }
-    public static Button randomFillingButtonSetting() {
+    public Button randomFillingButtonSetting() {
         Button randomFilling = new Button("Random filling");
         randomFilling.setOnAction(actionEvent -> {
 

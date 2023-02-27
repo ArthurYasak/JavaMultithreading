@@ -1,4 +1,4 @@
-package com.example.bacteriacolony;
+package com.example.bacteriacolony.GUI;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,8 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class StartScene{
-    public static Scene createScene(Stage stage) {
+public class StartScene {
+    public Scene createScene(Stage stage) {
         FlowPane startFlowPane = new FlowPane(10, 10);
         startFlowPane.setAlignment(Pos.CENTER);
         Scene scene = new Scene(startFlowPane, 700, 500);
@@ -34,10 +34,9 @@ public class StartScene{
             int width = Integer.parseInt(textWidth);
             String textHeigh = heighField.getText();
             int height = Integer.parseInt(textHeigh);
-            Button[][] cells = new Button[height][width];
-            int[][] states = new int[height][width];
-            Scene mainScene = MainScene.createScene(cells, states);
-            stage.setScene(mainScene);
+            MainScene mainScene = new MainScene();
+            Scene secondScene = mainScene.createScene(width, height);
+            stage.setScene(secondScene);
         });
 
         hBox.getChildren().add(enter);

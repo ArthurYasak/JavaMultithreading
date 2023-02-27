@@ -1,9 +1,9 @@
 package com.example.bacteriacolony;
 
+import com.example.bacteriacolony.GUI.StartScene;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.stage.*;
-
 
 public class MoleculaApplication extends Application {
     @Override
@@ -11,8 +11,9 @@ public class MoleculaApplication extends Application {
 
         stage.setTitle("My first App!");
 
-        Scene startScene = StartScene.createScene(stage);
-        stage.setScene(startScene);
+        StartScene startScene = new StartScene();
+        Scene firstScene = startScene.createScene(stage);
+        stage.setScene(firstScene);
 
         stage.show();
 
