@@ -1,6 +1,11 @@
 package com.example.bacteriacolony.GUI;
 
 import com.example.bacteriacolony.calculations.FieldCalculation;
+import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,6 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.security.Provider;
 
 public class MainScene {
     private FlowPane mainFlowPane;
@@ -85,9 +92,6 @@ public class MainScene {
 
     public void fieldUpdating() {
         for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                hBoxes[i].getChildren().remove(cells[i][j]);
-            }
             vBox.getChildren().remove(hBoxes[i]);
         }
         fieldFilling();
@@ -96,41 +100,117 @@ public class MainScene {
     public Button startStopButtonSetting() {
         Button startStop = new Button("Start");
         final boolean[] startStopStatement = {false};
+        // Thread guiThread = new Thread(() -> {
+        //     FieldCalculation fieldCalculation = new FieldCalculation();
+        //     Platform.runLater(() -> states = fieldCalculation.calculate(states));
+        //     Platform.runLater(() -> fieldUpdating());
+        //     try {
+        //         wait(2000);
+        //     } catch (InterruptedException ie) {
+        //         ie.printStackTrace();
+        //     }
+        // });
 
         // FieldCalculation fieldCalculation = new FieldCalculation();
         // Thread calculationThread = new Thread(fieldCalculation);
 
         startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
-        // new Thread(() -> {
+        // new Thread(() -> {   not throws Exception but App freezes when use sleep and while
         startStop.setOnAction(actionEvent -> {
-            if (startStopStatement[0]) {
+            // new Thread(() -> {   IllegalStateException: Not on FX application thread; currentThread = Thread-3
+            Service<Void> service = new Service<>() {
+                @Override
+                protected Task<Void> createTask() {
+                    return new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
 
-                startStopStatement[0] = false;
-                startStop.setText("Start");
-                startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
+                            if (startStopStatement[0]) {
 
-            } else {
-                startStopStatement[0] = true;
-                startStop.setText("Stop");
-                startStop.setStyle("-fx-text-fill: blue; -fx-background-color: red");
-                FieldCalculation fieldCalculation = new FieldCalculation();
-                states = fieldCalculation.calculate(states);
-                fieldUpdating();
+                                startStopStatement[0] = false;
+                                Platform.runLater(() -> startStop.setText("Start"));
+                                startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
 
-                // while (startStopStatement[0]) {
-                //     try {
-                //         FieldCalculation.calculate();
-                //         FieldDrawing.draw();
-                //         Thread.sleep(2000);
-                //     } catch (InterruptedException ie) {
-                //         ie.printStackTrace();
-                //     }
-                // }
+                            } else {
+                                startStopStatement[0] = true;
+                                Platform.runLater(() -> startStop.setText("Stop"));
+                                startStop.setStyle("-fx-text-fill: blue; -fx-background-color: red");
 
-            }
-            System.out.println("startStopStatement[0]:\n" + startStopStatement[0]);
+                                FieldCalculation fieldCalculation = new FieldCalculation();
+                                states = fieldCalculation.calculate(states);
+                                fieldUpdating();
+
+                                // while (startStopStatement[0]) {
+                                //     try {
+                                //         Thread.sleep(2000);
+                                //     } catch (InterruptedException ie) {
+                                //         ie.printStackTrace();
+                                //     }
+                                //     FieldCalculation fieldCalculation = new FieldCalculation();
+                                //     states = fieldCalculation.calculate(states);
+                                //     fieldUpdating();
+                                // }
+
+
+                                // new SleepService(states).start();
+
+
+                                // while (startStopStatement[0]) {
+                                //     guiThread.start();
+                                //     try {
+                                //         wait(2000);
+                                //     } catch (InterruptedException ie) {
+                                //         ie.printStackTrace();
+                                //     }
+                                //     // while (startStopStatement[0]) {
+                                //     //     try {
+                                //     //         FieldCalculation.calculate();
+                                //     //         FieldDrawing.draw();
+                                //     //         Thread.sleep(2000);
+                                //     //     } catch (InterruptedException ie) {
+                                //     //         ie.printStackTrace();
+                                //     //     }
+                                //     // }
+                                // }
+                            }
+                            System.out.println("startStopStatement[0]:\n" + startStopStatement[0]);
+
+                            return null;
+                        }
+                    };
+                }
+            };
+            service.start();
         });
         return startStop;
+    }
+
+    /**
+     * now is not uses
+     */
+    private class SleepService extends Service<int[][]> {
+        private static final int SLEEP_TIME = 2000;
+        private SleepService(int[][] statements) {
+
+            setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent workerStateEvent) {
+                    FieldCalculation fieldCalculation = new FieldCalculation();
+                    states = fieldCalculation.calculate(states);
+                }
+            });
+        }
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected String call() throws InterruptedException {
+                    Thread.sleep(SLEEP_TIME);
+
+                    return "nextStates";
+                }
+            };
+        }
     }
     public Button clearButtonSetting() {
         Button clear = new Button("Clear");

@@ -14,8 +14,11 @@ public class MoleculaApplication extends Application {
         StartScene startScene = new StartScene();
         Scene firstScene = startScene.createScene(stage);
         stage.setScene(firstScene);
-
         stage.show();
+
+
+
+
 
     }
 
