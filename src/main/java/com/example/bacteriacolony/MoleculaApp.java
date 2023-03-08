@@ -1,24 +1,18 @@
 package com.example.bacteriacolony;
 
-import com.example.bacteriacolony.GUI.StartScene;
+import com.example.bacteriacolony.gui.*;
 import javafx.application.Application;
-import javafx.scene.*;
 import javafx.stage.*;
 
-public class MoleculaApplication extends Application {
+public class MoleculaApp extends Application {
     @Override
     public void start(Stage stage) {
 
         stage.setTitle("My first App!");
 
-        StartScene startScene = new StartScene();
-        Scene firstScene = startScene.createScene(stage);
-        stage.setScene(firstScene);
+        StartScene startScene = new StartScene(800,600, stage);
+        stage.setScene(startScene);
         stage.show();
-
-
-
-
 
     }
 

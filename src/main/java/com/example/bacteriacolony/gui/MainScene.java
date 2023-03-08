@@ -1,4 +1,4 @@
-package com.example.bacteriacolony.GUI;
+package com.example.bacteriacolony.gui;
 
 import com.example.bacteriacolony.calculations.FieldCalculation;
 import javafx.application.Platform;
@@ -6,98 +6,66 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-import java.security.Provider;
-
-public class MainScene {
-    private FlowPane mainFlowPane;
-    private Button[][] cells;
-    private int[][] states;
-    private VBox vBox;
-    private HBox[] hBoxes;
-    Scene createScene(int width, int height) {
-        cells = new Button[height][width];
-        states = new int[height][width];
-        mainFlowPane = new FlowPane(10, 10);
-        mainFlowPane.setAlignment(Pos.CENTER);
-        Scene mainScene = new Scene(mainFlowPane, 700, 500);
-
-        controlPanelFilling();
-        fieldFilling();
-
-        return mainScene;
+public class MainScene extends MyScene {
+    CellsField cellsField;
+    public MainScene(Stage stage, CellsField cellsField) {
+        this(700, 500, stage, cellsField);
     }
-
-    public void controlPanelFilling() {
-        vBox = new VBox();
+    public MainScene(double width, double height, Stage stage, CellsField cellsField) {
+        super(width, height, stage);
+        this.cellsField = cellsField;
+    }
+    @Override
+    public void fill(Stage stage) {
+        VBox vBox = controlPanelFill();
+        bacteriaFieldFill(vBox);
+    }
+    public VBox controlPanelFill() {
+        VBox vBox = new VBox();
         vBox.setSpacing(1.5);
         Label empty = new Label("");
         vBox.getChildren().add(empty);
+
         HBox controlPanel = new HBox();
         controlPanel.setSpacing(10);
 
-        Button startStop = startStopButtonSetting();
+        StartStopButton startStop = new StartStopButton();
+        startStop.clickHandle(this, vBox);
         Button clear = clearButtonSetting();
         Button randomFilling = randomFillingButtonSetting();
 
         controlPanel.getChildren().add(startStop);
+
         // controlPanel.getChildren().add(clear);
         // controlPanel.getChildren().add(randomFilling);
 
         vBox.getChildren().add(controlPanel);
-        mainFlowPane.getChildren().add(vBox);
-    }
 
-    public void fieldFilling() {
-        hBoxes = new HBox[cells.length];
+        flowPane.getChildren().add(vBox);
+        return vBox;
+    }
+    public void bacteriaFieldFill(VBox vBox) {
+        for (int i = 0; i < vBox.getChildren().size() - 2; i++) {
+            vBox.getChildren().remove(i);
+        }
+        Button[][] cells = cellsField.getCells();
+        HBox[] hBoxes = new HBox[cells.length];
         for (int i = 0; i < cells.length; i++) {
             hBoxes[i] = new HBox();
             hBoxes[i].setSpacing(1);
-
             for (int j = 0; j < cells[0].length; j++) {
-                cells[i][j] = new Button("  ");
-                if (states[i][j] == 1) {
-                    cells[i][j].setStyle("-fx-background-color: red");
-                } else {
-                    cells[i][j].setStyle("-fx-border-width: 1 1 1 1");
-                }
-                final int finI = i;
-                final int finJ = j;
-                cells[i][j].setOnAction(actionEvent -> {
-                    System.out.print(finI + " : "+ finJ + "  state: ");
-
-                    if (states[finI][finJ] == 0) {
-                        states[finI][finJ] = 1;
-
-                        cells[finI][finJ].setStyle("-fx-background-color: red");
-                    } else {
-                        states[finI][finJ] = 0;
-                        cells[finI][finJ].setStyle("-fx-border-width: 1 1 1 1");
-                    }
-                    System.out.println(states[finI][finJ]);
-                });
-
                 hBoxes[i].getChildren().add(cells[i][j]);
             }
-            vBox.getChildren().add(0, hBoxes[i]);
+            vBox.getChildren().add(i, hBoxes[i]);
         }
     }
-
-    public void fieldUpdating() {
-        for (int i = 0; i < cells.length; i++) {
-            vBox.getChildren().remove(hBoxes[i]);
-        }
-        fieldFilling();
-    }
-
-    public Button startStopButtonSetting() {
+    public Button oldStartStopButtonSet() {
         Button startStop = new Button("Start");
         final boolean[] startStopStatement = {false};
         // Thread guiThread = new Thread(() -> {
@@ -118,7 +86,7 @@ public class MainScene {
         // new Thread(() -> {   not throws Exception but App freezes when use sleep and while
         startStop.setOnAction(actionEvent -> {
             // new Thread(() -> {   IllegalStateException: Not on FX application thread; currentThread = Thread-3
-            Service<Void> service = new Service<>() {
+            Service<Void> service = new Service<Void>() {
                 @Override
                 protected Task<Void> createTask() {
                     return new Task<Void>() {
@@ -137,8 +105,8 @@ public class MainScene {
                                 startStop.setStyle("-fx-text-fill: blue; -fx-background-color: red");
 
                                 FieldCalculation fieldCalculation = new FieldCalculation();
-                                states = fieldCalculation.calculate(states);
-                                fieldUpdating();
+                                // states = fieldCalculation.calculate(states);
+                                // fieldUpdating();
 
                                 // while (startStopStatement[0]) {
                                 //     try {
@@ -196,7 +164,7 @@ public class MainScene {
                 @Override
                 public void handle(WorkerStateEvent workerStateEvent) {
                     FieldCalculation fieldCalculation = new FieldCalculation();
-                    states = fieldCalculation.calculate(states);
+                    // states = fieldCalculation.calculate(states);
                 }
             });
         }
