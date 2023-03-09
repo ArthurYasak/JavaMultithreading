@@ -43,6 +43,6 @@ public class FieldCalculation {
             }
         }
         System.out.println("Next states:\n" + Arrays.deepToString(nextStates));
-        return(nextStates);
+        return nextStates;
     }
 }

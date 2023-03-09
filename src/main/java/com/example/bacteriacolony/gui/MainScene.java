@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainScene extends MyScene {
-    CellsField cellsField;
+    private CellsField cellsField;
     public MainScene(CellsField cellsField) {
         this(700, 500, cellsField);
     }
@@ -57,9 +57,12 @@ public class MainScene extends MyScene {
             vBox.getChildren().add(i, hBoxes[i]);
         }
     }
+    public CellsField getCellsField() {
+        return this.cellsField;
+    }
 
     /**
-     * now is not uses
+     * now is not used
      */
     private class SleepService extends Service<int[][]> {
         private static final int SLEEP_TIME = 2000;

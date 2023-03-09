@@ -14,8 +14,8 @@ public class StartStopButton extends Button {
     }
     CellsField clickHandle(MainScene mainScene) {
         FieldCalculation fieldCalculation = new FieldCalculation();
-        CellsField cellsField = mainScene.cellsField;
-        System.out.println(mainScene.cellsField);
+        CellsField cellsField = mainScene.getCellsField();
+        System.out.println(mainScene.getCellsField());
         System.out.println(cellsField);
         this.setOnAction(actionEvent -> {
             if (! startStopState) {
