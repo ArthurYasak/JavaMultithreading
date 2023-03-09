@@ -14,19 +14,19 @@ import javafx.stage.Stage;
 
 public class MainScene extends MyScene {
     CellsField cellsField;
-    public MainScene(Stage stage, CellsField cellsField) {
-        this(700, 500, stage, cellsField);
+    public MainScene(CellsField cellsField) {
+        this(700, 500, cellsField);
     }
-    public MainScene(double width, double height, Stage stage, CellsField cellsField) {
-        super(width, height, stage);
+    public MainScene(double width, double height, CellsField cellsField) {
+        super(width, height);
         this.cellsField = cellsField;
     }
     @Override
-    public void fill(Stage stage) {
+    void fill(Stage stage) {
         VBox vBox = controlPanelFill();
         bacteriaFieldFill(vBox);
     }
-    public VBox controlPanelFill() {
+    private VBox controlPanelFill() {
         VBox vBox = new VBox();
         vBox.setSpacing(1.5);
         Label empty = new Label("");
@@ -36,24 +36,16 @@ public class MainScene extends MyScene {
         controlPanel.setSpacing(10);
 
         StartStopButton startStop = new StartStopButton();
-        startStop.clickHandle(this, vBox);
-        Button clear = clearButtonSetting();
-        Button randomFilling = randomFillingButtonSetting();
+        startStop.clickHandle(this);
 
         controlPanel.getChildren().add(startStop);
-
-        // controlPanel.getChildren().add(clear);
-        // controlPanel.getChildren().add(randomFilling);
 
         vBox.getChildren().add(controlPanel);
 
         flowPane.getChildren().add(vBox);
         return vBox;
     }
-    public void bacteriaFieldFill(VBox vBox) {
-        for (int i = 0; i < vBox.getChildren().size() - 2; i++) {
-            vBox.getChildren().remove(i);
-        }
+    private void bacteriaFieldFill(VBox vBox) {
         Button[][] cells = cellsField.getCells();
         HBox[] hBoxes = new HBox[cells.length];
         for (int i = 0; i < cells.length; i++) {
@@ -64,93 +56,6 @@ public class MainScene extends MyScene {
             }
             vBox.getChildren().add(i, hBoxes[i]);
         }
-    }
-    public Button oldStartStopButtonSet() {
-        Button startStop = new Button("Start");
-        final boolean[] startStopStatement = {false};
-        // Thread guiThread = new Thread(() -> {
-        //     FieldCalculation fieldCalculation = new FieldCalculation();
-        //     Platform.runLater(() -> states = fieldCalculation.calculate(states));
-        //     Platform.runLater(() -> fieldUpdating());
-        //     try {
-        //         wait(2000);
-        //     } catch (InterruptedException ie) {
-        //         ie.printStackTrace();
-        //     }
-        // });
-
-        // FieldCalculation fieldCalculation = new FieldCalculation();
-        // Thread calculationThread = new Thread(fieldCalculation);
-
-        startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
-        // new Thread(() -> {   not throws Exception but App freezes when use sleep and while
-        startStop.setOnAction(actionEvent -> {
-            // new Thread(() -> {   IllegalStateException: Not on FX application thread; currentThread = Thread-3
-            Service<Void> service = new Service<Void>() {
-                @Override
-                protected Task<Void> createTask() {
-                    return new Task<Void>() {
-                        @Override
-                        protected Void call() throws Exception {
-
-                            if (startStopStatement[0]) {
-
-                                startStopStatement[0] = false;
-                                Platform.runLater(() -> startStop.setText("Start"));
-                                startStop.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
-
-                            } else {
-                                startStopStatement[0] = true;
-                                Platform.runLater(() -> startStop.setText("Stop"));
-                                startStop.setStyle("-fx-text-fill: blue; -fx-background-color: red");
-
-                                FieldCalculation fieldCalculation = new FieldCalculation();
-                                // states = fieldCalculation.calculate(states);
-                                // fieldUpdating();
-
-                                // while (startStopStatement[0]) {
-                                //     try {
-                                //         Thread.sleep(2000);
-                                //     } catch (InterruptedException ie) {
-                                //         ie.printStackTrace();
-                                //     }
-                                //     FieldCalculation fieldCalculation = new FieldCalculation();
-                                //     states = fieldCalculation.calculate(states);
-                                //     fieldUpdating();
-                                // }
-
-
-                                // new SleepService(states).start();
-
-
-                                // while (startStopStatement[0]) {
-                                //     guiThread.start();
-                                //     try {
-                                //         wait(2000);
-                                //     } catch (InterruptedException ie) {
-                                //         ie.printStackTrace();
-                                //     }
-                                //     // while (startStopStatement[0]) {
-                                //     //     try {
-                                //     //         FieldCalculation.calculate();
-                                //     //         FieldDrawing.draw();
-                                //     //         Thread.sleep(2000);
-                                //     //     } catch (InterruptedException ie) {
-                                //     //         ie.printStackTrace();
-                                //     //     }
-                                //     // }
-                                // }
-                            }
-                            System.out.println("startStopStatement[0]:\n" + startStopStatement[0]);
-
-                            return null;
-                        }
-                    };
-                }
-            };
-            service.start();
-        });
-        return startStop;
     }
 
     /**
@@ -180,18 +85,5 @@ public class MainScene extends MyScene {
             };
         }
     }
-    public Button clearButtonSetting() {
-        Button clear = new Button("Clear");
-        clear.setOnAction(actionEvent -> {
 
-        });
-        return clear;
-    }
-    public Button randomFillingButtonSetting() {
-        Button randomFilling = new Button("Random filling");
-        randomFilling.setOnAction(actionEvent -> {
-
-        });
-        return randomFilling;
-    }
 }

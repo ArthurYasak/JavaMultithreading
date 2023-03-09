@@ -11,14 +11,13 @@ public abstract class MyScene extends Scene {
     FlowPane flowPane;
     private double width;
     private double height;
-    public MyScene(Stage stage) {
-        this(700, 500, stage);
+    public MyScene() {
+        this(700, 500);
     }
-    public MyScene(double width, double height, Stage stage) {
-        this(new FlowPane(10,10), width, height, stage);
+    public MyScene(double width, double height) {
+        this(new FlowPane(10,10), width, height);
     }
-    public MyScene(@NamedArg("root") FlowPane var1, @NamedArg("width") double var2, @NamedArg("height") double var4,
-                   @NamedArg("stage") Stage stage) {
+    public MyScene(@NamedArg("root") FlowPane var1, @NamedArg("width") double var2, @NamedArg("height") double var4) {
         super(var1, var2, var4);
         this.flowPane = var1;
         var1.setAlignment(Pos.CENTER);

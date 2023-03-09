@@ -2,10 +2,10 @@ package com.example.bacteriacolony.gui;
 
 import javafx.scene.control.Button;
 
-public class Cell extends Button {
+public class ButtonCell extends Button {
     private int cellState;
 
-    public void clickHandle() {
+    void clickHandle() {
         this.setOnAction(actionEvent -> {
 
             if (getCellState() == 0) {
@@ -19,15 +19,11 @@ public class Cell extends Button {
             System.out.println(getCellState());
         });
     }
-    public void stopClickHandle() {
-        this.setOnAction(actionEvent -> { });
-    }
-
-    public int getCellState() {
+    int getCellState() {
         return cellState;
     }
 
-    public void setCellState(int cellState) {
+    void setCellState(int cellState) {
         this.cellState = cellState;
     }
 }

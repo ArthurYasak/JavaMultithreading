@@ -1,55 +1,55 @@
 package com.example.bacteriacolony.gui;
 
-import com.example.bacteriacolony.calculations.FieldCalculation;
-
 public class CellsField {
     private int fieldWidth;
     private int fieldHeight;
     private int[][] cellsStates;
-    private Cell[][] cells;
-    CellsField(int fieldWidth, int fieldHeight) {
+    private ButtonCell[][] cells;
+    public CellsField(int fieldWidth, int fieldHeight) {
         this.fieldWidth = fieldWidth;
         this.fieldHeight = fieldHeight;
-        this.cells = new Cell[fieldHeight][fieldWidth];
+        this.cells = new ButtonCell[fieldHeight][fieldWidth];
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
-                this.cells[i][j] = new Cell();
+                this.cells[i][j] = new ButtonCell();
                 this.cells[i][j].setText("  ");
                 this.cells[i][j].clickHandle();
             }
         }
         this.cellsStates = new int[fieldHeight][fieldWidth];
     }
-    public void updateCalculationStates() {
+    void updateCellsStates() {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
                 this.cellsStates[i][j] = cells[i][j].getCellState();
             }
         }
     }
-    public void updateGUI() {
-        GUIUpdator guiUpdator = new GUIUpdator();
-        cells = guiUpdator.update(cells);
+    void updateGUI() {
+        for (int i = 0; i < cells.length; i++ ) {
+            for (int j = 0; j < cells[0].length; j++) {
+                System.out.print(cells[i][j].getCellState() + " ");
+                if (cellsStates[i][j] == 0) {
+                    cells[i][j].setStyle("-fx-border-width: 1 1 1 1");
+                    cells[i][j].setCellState(0);
+                } else {
+                    cells[i][j].setStyle("-fx-background-color: red");
+                    cells[i][j].setCellState(1);
+                }
+            }
+            System.out.println();
+        }
     }
-    public int getFieldWidth() {
-        return this.fieldWidth;
-    }
-    public int getFieldHeight() {
-        return this.fieldHeight;
-    }
-
-    public int[][] getCellsStates() {
+    int[][] getCellsStates() {
         return cellsStates;
     }
 
-    public void setCellsStates(int[][] cellsStates) {
+    void setCellsStates(int[][] cellsStates) {
         this.cellsStates = cellsStates;
     }
 
-    public Cell[][] getCells() {
+    ButtonCell[][] getCells() {
         return cells;
     }
-    public void setCells(Cell[][] cells) {
-        this.cells = cells;
-    }
+
 }
