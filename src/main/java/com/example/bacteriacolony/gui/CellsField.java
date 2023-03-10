@@ -18,17 +18,16 @@ public class CellsField {
         }
         this.cellsStates = new int[fieldHeight][fieldWidth];
     }
-    void updateCellsStates() {
+    public void updateCellsStates() {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
                 this.cellsStates[i][j] = cells[i][j].getCellState();
             }
         }
     }
-    void updateGUI() {
+    public void updateGUI() {
         for (int i = 0; i < cells.length; i++ ) {
             for (int j = 0; j < cells[0].length; j++) {
-                System.out.print(cells[i][j].getCellState() + " ");
                 if (cellsStates[i][j] == 0) {
                     cells[i][j].setStyle("-fx-border-width: 1 1 1 1");
                     cells[i][j].setCellState(0);
@@ -37,14 +36,13 @@ public class CellsField {
                     cells[i][j].setCellState(1);
                 }
             }
-            System.out.println();
         }
     }
-    int[][] getCellsStates() {
+    public int[][] getCellsStates() {
         return cellsStates;
     }
 
-    void setCellsStates(int[][] cellsStates) {
+    public void setCellsStates(int[][] cellsStates) {
         this.cellsStates = cellsStates;
     }
 
