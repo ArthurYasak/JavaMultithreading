@@ -3,15 +3,17 @@ package com.example.bacteriacolony.gui;
 public class CellsField {
     private int fieldWidth;
     private int fieldHeight;
+    private int maxGenerations;
     private int[][] cellsStates;
-    private ButtonCell[][] cells;
-    public CellsField(int fieldWidth, int fieldHeight) {
+    private CellButton[][] cells;
+    public CellsField(int fieldWidth, int fieldHeight, int maxGenerations) {
         this.fieldWidth = fieldWidth;
         this.fieldHeight = fieldHeight;
-        this.cells = new ButtonCell[fieldHeight][fieldWidth];
+        this.maxGenerations = maxGenerations;
+        this.cells = new CellButton[fieldHeight][fieldWidth];
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
-                this.cells[i][j] = new ButtonCell();
+                this.cells[i][j] = new CellButton();
                 this.cells[i][j].setText("  ");
                 this.cells[i][j].clickHandle();
             }
@@ -38,6 +40,9 @@ public class CellsField {
             }
         }
     }
+    public int getMaxGenerations() {
+        return this.maxGenerations;
+    }
     public int[][] getCellsStates() {
         return cellsStates;
     }
@@ -46,8 +51,14 @@ public class CellsField {
         this.cellsStates = cellsStates;
     }
 
-    ButtonCell[][] getCells() {
+    CellButton[][] getCells() {
         return cells;
+    }
+    public int getFieldWidth() {
+        return this.fieldWidth;
+    }
+    public int getFieldHeight() {
+        return this.fieldHeight;
     }
 
 }

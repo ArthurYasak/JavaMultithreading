@@ -1,7 +1,5 @@
 package com.example.bacteriacolony.calculations;
 
-import java.util.Arrays;
-
 public class FieldCalculation {
     // @Override
     // public void run() {
@@ -11,7 +9,6 @@ public class FieldCalculation {
         int width = lastStates[0].length;
         int height = lastStates.length;
         int[][] nextStates = new int[height][width];
-        // System.out.println("Previous states:\n" + Arrays.deepToString(lastStates));
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if (lastStates[i][j] == 0) {
@@ -41,7 +38,6 @@ public class FieldCalculation {
                 }
             }
         }
-        // System.out.println("Next states:\n" + Arrays.deepToString(nextStates));
         return nextStates;
     }
 }

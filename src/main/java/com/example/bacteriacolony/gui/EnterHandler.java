@@ -4,13 +4,17 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class EnterHandler {
-    void handle(TextField widthField, TextField heightField, Stage stage) {
+    void handle(TextField widthField, TextField heightField, TextField generationsField, Stage stage) {
         String textWidth = widthField.getText();
         int fieldWidth = Integer.parseInt(textWidth);
-        String textHeigh = heightField.getText();
-        int fieldHeight = Integer.parseInt(textHeigh);
-        CellsField cellsField = new CellsField(fieldWidth, fieldHeight);
-        MainScene mainScene = new MainScene(cellsField);
+        String textHeight = heightField.getText();
+        int fieldHeight = Integer.parseInt(textHeight);
+        String textGenerations = generationsField.getText();
+        int maxGenerations = Integer.parseInt(textGenerations);
+
+        CellsField cellsField = new CellsField(fieldWidth, fieldHeight, maxGenerations);
+        MainScene mainScene = new MainScene(400 + (fieldWidth <= 9 ? 0 : (fieldWidth - 9) * 40),
+                300 + (fieldHeight <= 7 ? 0 : (fieldHeight - 9) * 40), cellsField);
         mainScene.fill(stage);
         stage.setScene(mainScene);
     }

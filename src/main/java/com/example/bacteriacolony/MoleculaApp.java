@@ -11,7 +11,7 @@ public class MoleculaApp extends Application {
         stage.setTitle("My first App!");
         stage.setOnCloseRequest((eventHandler) -> System.exit(0));
 
-        StartScene startScene = new StartScene(800,600, stage);
+        StartScene startScene = new StartScene(500,300, stage);
         stage.setScene(startScene);
         stage.show();
 

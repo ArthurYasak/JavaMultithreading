@@ -1,7 +1,6 @@
 package com.example.bacteriacolony.gui;
 
 import com.example.bacteriacolony.calculations.FieldCalculation;
-import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -35,10 +34,22 @@ public class MainScene extends MyScene {
         HBox controlPanel = new HBox();
         controlPanel.setSpacing(10);
 
-        StartStopButton startStop = new StartStopButton();
-        startStop.clickHandle(this);
+        StartStopButton startStopButton = new StartStopButton();
+        startStopButton.clickHandle(this.cellsField);
 
-        controlPanel.getChildren().add(startStop);
+        GeneratorButton generatorButton = new GeneratorButton();
+        generatorButton.clickHandle(this.cellsField);
+
+        ClearButton clearButton = new ClearButton();
+        clearButton.clickHandle(this.cellsField);
+
+        ExitButton exitButton = new ExitButton();
+        exitButton.clickHandle();
+
+        controlPanel.getChildren().add(startStopButton);
+        controlPanel.getChildren().add(generatorButton);
+        controlPanel.getChildren().add(clearButton);
+        controlPanel.getChildren().add(exitButton);
 
         vBox.getChildren().add(controlPanel);
 
@@ -88,5 +99,4 @@ public class MainScene extends MyScene {
             };
         }
     }
-
 }

@@ -2,7 +2,7 @@ package com.example.bacteriacolony.gui;
 
 import javafx.scene.control.Button;
 
-public class ButtonCell extends Button {
+public class CellButton extends Button {
     private int cellState;
 
     void clickHandle() {

@@ -1,6 +1,5 @@
 package com.example.bacteriacolony.gui;
 
-import com.example.bacteriacolony.calculations.FieldCalculation;
 import javafx.beans.NamedArg;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

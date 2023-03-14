@@ -8,18 +8,18 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class StartStopButton extends Button {
     private boolean startStopState;
-    public StartStopButton() {
+    StartStopButton() {
         this.setText("Start");
         this.setStyle("-fx-text-fill: yellow; -fx-background-color: green");
     }
-    void clickHandle(MainScene mainScene) {
-
+    void clickHandle(CellsField cellsField) {
         Lock lock = new ReentrantLock();
 
-        StartThread startThread = StartThread.of(mainScene, lock);
+        StartThread startThread = StartThread.of(cellsField, lock);
 
         startThread.start();
         lock.lock();
+
         this.setOnAction(actionEvent -> {
 
             if (! startStopState) {

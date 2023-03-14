@@ -2,7 +2,6 @@ package com.example.bacteriacolony.threads;
 
 import com.example.bacteriacolony.calculations.FieldCalculation;
 import com.example.bacteriacolony.gui.CellsField;
-import com.example.bacteriacolony.gui.MainScene;
 
 import java.util.concurrent.locks.Lock;
 
@@ -12,12 +11,14 @@ public class StartThread extends Thread {
         super(target);
     }
 
-    public static StartThread of(MainScene mainScene, Lock lock) {
+    public static StartThread of(CellsField cellsField, Lock lock) {
+
         FieldCalculation fieldCalculation = new FieldCalculation();
-        CellsField cellsField = mainScene.getCellsField();
+        int maxGenerations = cellsField.getMaxGenerations();
+
         return new StartThread(() -> {
             int i = 0;
-            while (true) {
+            while (i < maxGenerations) {
                 lock.lock();
                 lock.unlock();
 
@@ -31,6 +32,8 @@ public class StartThread extends Thread {
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
+
+                i++;
             }
         });
     }
