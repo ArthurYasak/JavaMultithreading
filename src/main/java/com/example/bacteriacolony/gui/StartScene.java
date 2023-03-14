@@ -47,7 +47,9 @@ public class StartScene extends MyScene {
         Button enter = new Button("Enter");
         enter.setOnAction(actionEvent -> {
             EnterHandler enterHandler = new EnterHandler();
-            enterHandler.handle(widthField, heightField, generationsField, stage);
+            stage.close();
+
+            enterHandler.handle(widthField, heightField, generationsField);
         });
 
         vBox.setSpacing(20);
