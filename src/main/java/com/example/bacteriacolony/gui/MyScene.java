@@ -11,7 +11,7 @@ public abstract class MyScene extends Scene {
     private double width;
     private double height;
     public MyScene() {
-        this(700, 500);
+        this(500, 300);
     }
     public MyScene(double width, double height) {
         this(new FlowPane(10,10), width, height);

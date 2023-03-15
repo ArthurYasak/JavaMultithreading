@@ -1,19 +1,18 @@
 package com.example.bacteriacolony.gui;
 
+import com.example.bacteriacolony.model.CellsFieldModel;
 import javafx.scene.control.Button;
 
 public class ClearButton extends Button {
-    ClearButton() {
+    ClearButton(CellsFieldView cellsFieldView, CellsFieldModel cellsFieldModel) {
         this.setText("Clear");
-    }
-    void clickHandle(CellsField cellsField) {
         this.setOnAction(actionEvent -> {
 
-            int width = cellsField.getFieldWidth();
-            int height = cellsField.getFieldHeight();
+            int width = cellsFieldModel.getFieldWidth();
+            int height = cellsFieldModel.getFieldHeight();
             int[][] emptyField = new int[height][width];
-            cellsField.setCellsStates(emptyField);
-            cellsField.updateGUI();
+            cellsFieldModel.setCellsStates(emptyField);
+            cellsFieldView.updateGUI(emptyField);
 
         });
     }

@@ -1,4 +1,4 @@
-package com.example.bacteriacolony.calculations;
+package com.example.bacteriacolony.model;
 
 public class FieldCalculation {
     // @Override

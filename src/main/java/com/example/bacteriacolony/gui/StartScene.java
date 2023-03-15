@@ -44,19 +44,13 @@ public class StartScene extends MyScene {
         generationsField.setPromptText("generations");
         generationsBox.getChildren().add(generationsField);
 
-        Button enter = new Button("Enter");
-        enter.setOnAction(actionEvent -> {
-            EnterHandler enterHandler = new EnterHandler();
-            stage.close();
-
-            enterHandler.handle(widthField, heightField, generationsField);
-        });
+        EnterButton enterButton = new EnterButton(stage, widthField, heightField, generationsField);
 
         vBox.setSpacing(20);
         vBox.getChildren().add(widthBox);
         vBox.getChildren().add(heightBox);
         vBox.getChildren().add(generationsBox);
-        vBox.getChildren().add(enter);
+        vBox.getChildren().add(enterButton);
         flowPane.getChildren().add(vBox);
     }
 }

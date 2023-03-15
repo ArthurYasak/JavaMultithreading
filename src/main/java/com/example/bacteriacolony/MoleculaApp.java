@@ -8,13 +8,12 @@ public class MoleculaApp extends Application {
     @Override
     public void start(Stage stage) {
 
-        stage.setTitle("My first App!");
+        stage.setTitle("Bacteria colony settings");
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
 
         StartScene startScene = new StartScene(500,300, stage);
         stage.setScene(startScene);
         stage.show();
-
     }
 
     @Override

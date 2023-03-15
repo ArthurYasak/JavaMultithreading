@@ -1,23 +1,22 @@
 package com.example.bacteriacolony.gui;
 
-import com.example.bacteriacolony.calculations.Generator;
+import com.example.bacteriacolony.model.CellsFieldModel;
+import com.example.bacteriacolony.model.Generator;
 import javafx.scene.control.Button;
 
 public class GeneratorButton extends Button {
 
-    GeneratorButton() {
+    GeneratorButton(CellsFieldView cellsFieldView, CellsFieldModel cellsFieldModel) {
         this.setText("Generate");
-    }
-
-    void clickHandle(CellsField cellsField) {
         this.setOnAction((actionEvent) -> {
             Generator generator = new Generator();
 
-            int fieldWidth = cellsField.getFieldWidth();
-            int fieldHeight = cellsField.getFieldHeight();
+            int fieldWidth = cellsFieldModel.getFieldWidth();
+            int fieldHeight = cellsFieldModel.getFieldHeight();
             int[][] generatedStates = generator.generate(fieldWidth, fieldHeight);
-            cellsField.setCellsStates(generatedStates);
-            cellsField.updateGUI();
+            cellsFieldModel.setCellsStates(generatedStates);
+            int[][] nextStates = cellsFieldModel.getCellsStates();
+            cellsFieldView.updateGUI(nextStates);
         });
     }
 }

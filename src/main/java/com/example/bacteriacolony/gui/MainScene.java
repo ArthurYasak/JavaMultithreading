@@ -1,10 +1,7 @@
 package com.example.bacteriacolony.gui;
 
-import com.example.bacteriacolony.calculations.FieldCalculation;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
+import com.example.bacteriacolony.model.CellsFieldModel;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -12,13 +9,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainScene extends MyScene {
-    private CellsField cellsField;
-    public MainScene(CellsField cellsField) {
-        this(700, 500, cellsField);
+    private CellsFieldView cellsFieldView;
+    private CellsFieldModel cellsFieldModel;
+    public MainScene(CellsFieldView cellsFieldView, CellsFieldModel cellsFieldModel) {
+        this(500, 300, cellsFieldView, cellsFieldModel);
     }
-    public MainScene(double width, double height, CellsField cellsField) {
+    public MainScene(double width, double height, CellsFieldView cellsFieldView, CellsFieldModel cellsFieldModel) {
         super(width, height);
-        this.cellsField = cellsField;
+        this.cellsFieldView = cellsFieldView;
+        this.cellsFieldModel = cellsFieldModel;
     }
     @Override
     void fill(Stage stage) {
@@ -34,17 +33,10 @@ public class MainScene extends MyScene {
         HBox controlPanel = new HBox();
         controlPanel.setSpacing(10);
 
-        StartStopButton startStopButton = new StartStopButton();
-        startStopButton.clickHandle(this.cellsField);
-
-        GeneratorButton generatorButton = new GeneratorButton();
-        generatorButton.clickHandle(this.cellsField);
-
-        ClearButton clearButton = new ClearButton();
-        clearButton.clickHandle(this.cellsField);
-
+        StartStopButton startStopButton = new StartStopButton(this.cellsFieldView, this.cellsFieldModel);
+        GeneratorButton generatorButton = new GeneratorButton(this.cellsFieldView, this.cellsFieldModel);
+        ClearButton clearButton = new ClearButton(this.cellsFieldView, this.cellsFieldModel);
         ExitButton exitButton = new ExitButton();
-        exitButton.clickHandle();
 
         controlPanel.getChildren().add(startStopButton);
         controlPanel.getChildren().add(generatorButton);
@@ -57,7 +49,7 @@ public class MainScene extends MyScene {
         return vBox;
     }
     private void bacteriaFieldFill(VBox vBox) {
-        Button[][] cells = cellsField.getCells();
+        Button[][] cells = cellsFieldView.getCells();
         HBox[] hBoxes = new HBox[cells.length];
         for (int i = 0; i < cells.length; i++) {
             hBoxes[i] = new HBox();
@@ -66,37 +58,6 @@ public class MainScene extends MyScene {
                 hBoxes[i].getChildren().add(cells[i][j]);
             }
             vBox.getChildren().add(i, hBoxes[i]);
-        }
-    }
-    public CellsField getCellsField() {
-        return this.cellsField;
-    }
-
-    /**
-     * now is not used
-     */
-    private class SleepService extends Service<int[][]> {
-        private static final int SLEEP_TIME = 2000;
-        private SleepService(int[][] statements) {
-
-            setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                @Override
-                public void handle(WorkerStateEvent workerStateEvent) {
-                    FieldCalculation fieldCalculation = new FieldCalculation();
-                    // states = fieldCalculation.calculate(states);
-                }
-            });
-        }
-        @Override
-        protected Task createTask() {
-            return new Task() {
-                @Override
-                protected String call() throws InterruptedException {
-                    Thread.sleep(SLEEP_TIME);
-
-                    return "nextStates";
-                }
-            };
         }
     }
 }
